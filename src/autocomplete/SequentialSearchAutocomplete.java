@@ -23,14 +23,29 @@ public class SequentialSearchAutocomplete implements Autocomplete {
     }
 
     @Override
+    /**
+     * Adds 'terms' parameter
+     * https://www.baeldung.com/java-collections-complexity
+     * ArrayList addAll - O(N)
+     */
     public void addAll(Collection<? extends CharSequence> terms) {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.terms.addAll(terms);
     }
 
     @Override
+    /**
+     * Adds 'terms' parameter
+     * https://www.baeldung.com/java-collections-complexity
+     * ArrayList addAll - O(N)
+     */
     public List<CharSequence> allMatches(CharSequence prefix) {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        List<CharSequence> matches = new ArrayList<>();
+        for (CharSequence term : this.terms) {
+            if (term.length() >= prefix.length()
+                    && CharSequence.compare(term.subSequence(0, prefix.length()), prefix) == 0) {
+                matches.add(term);
+            }
+        }
+        return matches;
     }
 }

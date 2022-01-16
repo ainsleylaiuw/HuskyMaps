@@ -57,9 +57,9 @@ class CitiesMultiTest {
 
         // Testing implementations.
         Map<String, Autocomplete> implementations = Map.of(
-                "SequentialSearchAutocomplete", new SequentialSearchAutocomplete(),
-                "BinarySearchAutocomplete", new BinarySearchAutocomplete(),
-                "TernarySearchTreeAutocomplete", new TernarySearchTreeAutocomplete()
+                //"SequentialSearchAutocomplete", new SequentialSearchAutocomplete()//,
+                "BinarySearchAutocomplete", new BinarySearchAutocomplete()//,
+                //"TernarySearchTreeAutocomplete", new TernarySearchTreeAutocomplete()
         );
         // Add cities to each testing implementation.
         for (Autocomplete autocomplete : implementations.values()) {
