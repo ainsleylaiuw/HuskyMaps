@@ -1,7 +1,6 @@
 package autocomplete;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Ternary search tree (TST) implementation of the {@link Autocomplete} interface.
@@ -13,7 +12,6 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
      * The overall root of the tree: the first character of the first autocompletion term added to this tree.
      */
     private Node overallRoot;
-    private int n; //size
     /**
      * Constructs an empty instance.
      */
@@ -29,7 +27,7 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
      *     and {@code null} if the key is not in the symbol table
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public Boolean get(String key) {
+    public Boolean get(CharSequence key) {
         if (key == null) {
             throw new IllegalArgumentException("calls get() with null argument");
         }
@@ -40,7 +38,7 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
     }
 
     // return subtrie corresponding to given key
-    private Node get(Node x, String key, int d) {
+    private Node get(Node x, CharSequence key, int d) {
         if (x == null) return null;
         if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
         char c = key.charAt(d);
@@ -57,11 +55,14 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
      *     {@code false} otherwise
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public boolean contains(String key) {
+    public boolean contains(CharSequence key) {
         if (key == null) {
             throw new IllegalArgumentException("argument to contains() is null");
         }
-        return get(key) != null;
+        //return get(key) != true;
+       //  Need to check if is term
+        Node x = get(overallRoot, key, 0);
+        return x != null && x.isTerm;
     }
 
     /**
@@ -69,34 +70,61 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
      * with the new value if the key is already in the symbol table.
      * If the value is {@code null}, this effectively deletes the key from the symbol table.
      * @param key the key
-     * @param val the value
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public void put(String key, Boolean val) {
+    public void put(CharSequence key) {
         if (key == null) {
             throw new IllegalArgumentException("calls put() with null key");
         }
-        if (!contains(key)) n++;
-        else if(val == null) n--;       // delete existing key
-        overallRoot = put(overallRoot, key, val, 0);
-        //
         if (!contains(key)) {
-            overallRoot = put(overallRoot, key, val, 0);
-        } else if (val == null) {
-
+            overallRoot = put(overallRoot, key, 0);
         }
     }
 
-    private Node put(Node x, String key, Boolean val, int d) {
+    private Node put(Node x, CharSequence key, int d) {
         char c = key.charAt(d);
         if (x == null) {
             x = new Node(c);
         }
-        if      (c < x.data)               x.left  = put(x.left,  key, val, d);
-        else if (c > x.data)               x.right = put(x.right, key, val, d);
-        else if (d < key.length() - 1)  x.mid   = put(x.mid,   key, val, d+1);
-        else                            x.isTerm   = val;
+        if      (c < x.data)               x.left  = put(x.left,  key, d);
+        else if (c > x.data)               x.right = put(x.right, key, d);
+        else if (d < key.length() - 1)  x.mid   = put(x.mid,   key, d+1);
+        else                            x.isTerm   = true;
         return x;
+    }
+
+
+    /**
+     * Returns all of the keys in the set that start with {@code prefix}.
+     * @param prefix the prefix
+     * @return all of the keys in the set that start with {@code prefix},
+     *     as an iterable
+     * @throws IllegalArgumentException if {@code prefix} is {@code null}
+     */
+    public List<CharSequence> keysWithPrefix(CharSequence prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException("calls keysWithPrefix() with null argument");
+        } else if (prefix.length() == 0) {
+            throw new IllegalArgumentException("prefix must have length >= 1");
+        }
+        List<CharSequence> list = new LinkedList<CharSequence>();
+        Node x = get(overallRoot, prefix, 0);
+        if (x == null) return list;
+        if (x.isTerm) list.add(prefix);
+        collect(x.mid, new StringBuilder(prefix), list);
+        return list;
+    }
+
+    // all keys in subtrie rooted at x with given prefix
+    private void collect(Node x, StringBuilder prefix, List<CharSequence> list) {
+        if (x == null) return;
+        collect(x.left,  prefix, list);
+        if (x.isTerm) list.add(prefix.toString() + x.data);
+        prefix.append(x.data);
+        collect(x.mid, prefix, list);
+        //remove the char at the root after done traversing through mid to go right
+        prefix.deleteCharAt(prefix.length() - 1);
+        collect(x.right, prefix, list);
     }
 
     @Override
@@ -104,14 +132,13 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
     // what does value mean
     public void addAll(Collection<? extends CharSequence> terms) {
         for (CharSequence term : terms) {
-            put(term.toString(), get(term.toString()));
+            put(term);
         }
     }
 
     @Override
     public List<CharSequence> allMatches(CharSequence prefix) {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return keysWithPrefix(prefix);
     }
 
     /**
@@ -133,5 +160,6 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
         }
     }
 }
+
 
 

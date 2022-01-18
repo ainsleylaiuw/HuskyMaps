@@ -57,9 +57,9 @@ class CitiesMultiTest {
 
         // Testing implementations.
         Map<String, Autocomplete> implementations = Map.of(
-                "SequentialSearchAutocomplete", new SequentialSearchAutocomplete(),
-                "BinarySearchAutocomplete", new BinarySearchAutocomplete()//,
-                //"TernarySearchTreeAutocomplete", new TernarySearchTreeAutocomplete()
+                //"SequentialSearchAutocomplete", new SequentialSearchAutocomplete(),
+                "BinarySearchAutocomplete", new BinarySearchAutocomplete(),
+                "TernarySearchTreeAutocomplete", new TernarySearchTreeAutocomplete()
         );
         // Add cities to each testing implementation.
         for (Autocomplete autocomplete : implementations.values()) {
@@ -80,11 +80,17 @@ class CitiesMultiTest {
             referenceMatches.sort(CharSequence::compare);
             printMatches(referenceMatches);
 
+            // Test for Ternary
+            //Map<String, List> results =
+
             // Check each implementation against the reference matches.
             for (String name : implementations.keySet()) {
                 Autocomplete autocomplete = implementations.get(name);
                 List<CharSequence> matches = autocomplete.allMatches(prefix);
                 matches.sort(CharSequence::compare);
+
+                // Test for Ternary
+                // results.add(matches);
                 if (matches.equals(referenceMatches)) {
                     System.out.println(name + " PASS!");
                 } else {
@@ -94,6 +100,16 @@ class CitiesMultiTest {
             }
             System.out.println();
             System.out.print("Query: ");
+
+            // Test for Ternary
+            /*
+            System.out.println("TEST: What Ternary is missing:")
+            for () {
+                if (!result)
+            }
+             */
+
         }
     }
+
 }
