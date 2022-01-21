@@ -39,7 +39,7 @@ public class BinarySearchAutocomplete implements Autocomplete {
 
     @Override
     /**
-     * logN + 1 + N
+     * Worstcase: big Theta(N)
      */
     public List<CharSequence> allMatches(CharSequence prefix) {
         List<CharSequence> matches = new ArrayList<>();

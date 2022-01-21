@@ -26,7 +26,7 @@ public class SequentialSearchAutocomplete implements Autocomplete {
     /**
      * Adds 'terms' parameter
      * https://www.baeldung.com/java-collections-complexity
-     * ArrayList addAll - O(N)
+     * ArrayList addAll - O(N) ACTUALLY CONSTANT (source: Kevin)
      */
     public void addAll(Collection<? extends CharSequence> terms) {
         this.terms.addAll(terms);
