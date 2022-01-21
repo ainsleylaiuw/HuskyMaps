@@ -38,6 +38,8 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
     }
 
     // return subtrie corresponding to given key
+    // T(N) = 1 + 1 + 1 + T(N/3)
+    // Worst case - N
     private Node get(Node x, CharSequence key, int d) {
         if (x == null) return null;
         if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
@@ -60,9 +62,10 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
             throw new IllegalArgumentException("argument to contains() is null");
         }
         //return get(key) != true;
-       //  Need to check if is term
-        Node x = get(overallRoot, key, 0);
-        return x != null && x.isTerm;
+        // Need to check if is term
+        return get(key) != null && get(key) == true;
+        //Node x = get(overallRoot, key, 0);
+        //return x != null && x.isTerm;
     }
 
     /**
@@ -81,6 +84,7 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
         }
     }
 
+    // put helper
     private Node put(Node x, CharSequence key, int d) {
         char c = key.charAt(d);
         if (x == null) {
@@ -114,7 +118,7 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
         collect(x.mid, new StringBuilder(prefix), list);
         return list;
     }
-
+    // T(N) = 3T(N/3) + 1 --> theta logN
     // all keys in subtrie rooted at x with given prefix
     private void collect(Node x, StringBuilder prefix, List<CharSequence> list) {
         if (x == null) return;
@@ -128,8 +132,10 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
     }
 
     @Override
-    // deciding which key to start with
-    // what does value mean
+    /**
+     * N * logN
+     *
+     */
     public void addAll(Collection<? extends CharSequence> terms) {
         for (CharSequence term : terms) {
             put(term);
@@ -137,6 +143,9 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
     }
 
     @Override
+    /**
+     * Worst case theta(N + logN)
+     */
     public List<CharSequence> allMatches(CharSequence prefix) {
         return keysWithPrefix(prefix);
     }

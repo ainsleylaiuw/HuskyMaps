@@ -27,9 +27,10 @@ public class BinarySearchAutocomplete implements Autocomplete {
     /**
      * Adds 'terms' parameter
      * https://www.baeldung.com/java-collections-complexity
-     * ArrayList addAll - O(N)
+     * ArrayList addAll - O(N) ACTUALLY CONSTANT (source: Kevin)
      * Collections.sort - O(N*log(N))
      * https://stackoverflow.com/q/25492648
+     * Overall runtime analysis = Theta(N*log(N))
      */
     public void addAll(Collection<? extends CharSequence> terms) {
         this.terms.addAll(terms);
@@ -38,7 +39,7 @@ public class BinarySearchAutocomplete implements Autocomplete {
 
     @Override
     /**
-     *
+     * logN + 1 + N
      */
     public List<CharSequence> allMatches(CharSequence prefix) {
         List<CharSequence> matches = new ArrayList<>();
@@ -46,7 +47,7 @@ public class BinarySearchAutocomplete implements Autocomplete {
         if (i < 0) {
             // i < 0 when the prefix does not exactly match any of the terms
             i = -(i+1);
-         }
+        }
         while (Autocomplete.isPrefixOf(prefix, terms.get(i))) {
             matches.add(terms.get(i));
             i++;
