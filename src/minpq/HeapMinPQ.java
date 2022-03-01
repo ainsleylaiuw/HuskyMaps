@@ -5,6 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 /**
+ * My part for the presentation
+ */
+
+/**
  * {@link PriorityQueue} implementation of the {@link ExtrinsicMinPQ} interface.
  *
  * @param <T> the type of elements in this priority queue.
@@ -28,14 +32,12 @@ public class HeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (contains(item)) {
             throw new IllegalArgumentException("Already contains " + item);
         }
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        pq.add(new PriorityNode<>(item, priority));
     }
 
     @Override
     public boolean contains(T item) {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return pq.contains(new PriorityNode<>(item, 0));
     }
 
     @Override
@@ -43,31 +45,42 @@ public class HeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (isEmpty()) {
             throw new NoSuchElementException("PQ is empty");
         }
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return pq.peek().item();
     }
 
+    /**
+     * O(logN) https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
+     *
+     * @return The item of the minimum priority PriorityNode
+     */
     @Override
     public T removeMin() {
         if (isEmpty()) {
             throw new NoSuchElementException("PQ is empty");
         }
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return pq.poll().item();
     }
 
+    /**
+     * O(N) https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
+     * remove(Object) takes O(N)
+     * add() takes O(logN)
+     * Use highest term
+     *
+     * @param item     the element whose associated priority value should be modified.
+     * @param priority the updated priority value.
+     */
     @Override
     public void changePriority(T item, double priority) {
         if (!contains(item)) {
             throw new NoSuchElementException("PQ does not contain " + item);
         }
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        pq.remove(new PriorityNode<>(item, 0)); // does not use priority
+        pq.add(new PriorityNode<>(item, priority));
     }
 
     @Override
     public int size() {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return pq.size();
     }
 }

@@ -2,6 +2,7 @@ package minpq.moderator;
 
 import minpq.DoubleMapMinPQ;
 import minpq.ExtrinsicMinPQ;
+import minpq.UnsortedArrayMinPQ;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ class Moderator {
     /**
      * Hide the content if true.
      */
-    private static final boolean SAFE_FOR_WORK = true;
+    private static final boolean SAFE_FOR_WORK = false;
     /**
      * Path to the toxic content.
      */
@@ -26,7 +27,7 @@ class Moderator {
         Scanner scanner = new Scanner(new GZIPInputStream(new FileInputStream(PATH)));
         scanner.nextLine(); // Skip header
 
-        ExtrinsicMinPQ<String> pq = new DoubleMapMinPQ<>();
+        ExtrinsicMinPQ<String> pq = new UnsortedArrayMinPQ<>();
         Random random = new Random();
         addComments(pq, scanner, random.nextInt(100));
         Scanner stdin = new Scanner(System.in);
