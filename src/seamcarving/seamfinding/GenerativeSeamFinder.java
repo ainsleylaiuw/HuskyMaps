@@ -72,8 +72,12 @@ public class GenerativeSeamFinder implements SeamFinder {
         private final Node source = new Node() {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
-                // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                List<Edge<Node>> result = new ArrayList<>(picture.height());
+                for (int j = 0; j < picture.height(); j += 1) {
+                    Pixel to = new Pixel(0, j);
+                    result.add(new Edge<>(this, to, f.apply(picture, 0, j)));
+                }
+                return result;
             }
         };
         /**
@@ -82,8 +86,7 @@ public class GenerativeSeamFinder implements SeamFinder {
         private final Node sink = new Node() {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
-                // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                return List.of();
             }
         };
 
@@ -127,10 +130,38 @@ public class GenerativeSeamFinder implements SeamFinder {
                 this.y = y;
             }
 
+            /**
+             *****************************************************************************************************
+             * WORK ON THIS
+             * @param picture the input picture.
+             * @param f       the input energy function.
+             * @return return the list of neighbors for a given Pixel.
+             *         Create a new Pixel for each neighbor. These pixels are the Nodes
+             *         This is in Pixel class, so we have access to [x, y] pair
+             */
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
-                // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                // Returnable list and Pixel
+                List<Edge<Node>> neighbors = new ArrayList<Edge<Node>>();
+                // below can be replaced w/ 'this'
+                // Pixel from = new Pixel(this.x, this.y);
+
+                // source handler, check if on edge
+                // corresponds to first for loop in Adjacency
+                if (this.x == picture.width() - 1) {
+                    neighbors.add(new Edge<>(this, sink, 0));
+                } else {
+                    // Connect the pixel to its right-up, right-middle, and right-down neighbors...
+                    for (int z = y - 1; z <= y + 1; z += 1) {
+                        // Only if the neighbor is in the bounds of the picture.
+                        if (0 <= z && z < picture.height()) {
+                            // "Create a new Pixel for each neighbor"
+                            Pixel to = new Pixel(x + 1, z);
+                            neighbors.add(new Edge<>(this, to, f.apply(picture, x + 1, z)));
+                        }
+                    }
+                }
+                return neighbors;
             }
 
             @Override
