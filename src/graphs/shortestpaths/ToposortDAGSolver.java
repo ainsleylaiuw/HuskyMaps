@@ -24,8 +24,37 @@ public class ToposortDAGSolver<V> implements ShortestPathSolver<V> {
     public ToposortDAGSolver(Graph<V> graph, V start) {
         this.edgeTo = new HashMap<>();
         this.distTo = new HashMap<>();
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        edgeTo.put(start, null);
+        distTo.put(start, 0.0);
+        Set<V> visited = new HashSet<>();
+        List<V> result = new ArrayList<>();
+        if (!visited.contains(start)) {
+            dfsPostOrder(graph, start, visited, result);
+        }
+        // Reverse the DFS postorder.
+        Collections.reverse(result);
+        for (V node: result) {
+            for (Edge<V> edge : graph.neighbors(node)) {
+                V to = edge.to;
+                // oldDist is the weight of the best-known path not using this edge.
+                double oldDist = distTo.getOrDefault(to, Double.POSITIVE_INFINITY);
+                // newDist is the weight of the shortest path using this edge.
+                double newDist = distTo.get(node) + edge.weight;
+                // Check that we haven't added the vertex to the SPT already...
+                // AND the path using this edge is better than the best-known path.
+                // if () cond. can't have "!visited.contains(to) && "
+                if (newDist < oldDist) {
+                    edgeTo.put(to, edge);
+                    // Store the weight of the path using this edge.
+                    distTo.put(to, newDist);
+                    //dfsPostOrder(graph, start, visited, result);
+                }
+                // This if block is called "relaxing" an edge.
+            }
+        }
+
+
     }
 
     /**
@@ -37,8 +66,14 @@ public class ToposortDAGSolver<V> implements ShortestPathSolver<V> {
      * @param result  the destination for adding nodes.
      */
     private void dfsPostOrder(Graph<V> graph, V start, Set<V> visited, List<V> result) {
-        // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        visited.add(start);
+        for (Edge<V> neighbor : graph.neighbors(start)) {
+            if (!visited.contains(neighbor.to)) {
+                dfsPostOrder(graph, neighbor.to, visited, result);
+            }
+        }
+        // Postorder: Add start after visiting all the neighbors.
+        result.add(start);
     }
 
     @Override

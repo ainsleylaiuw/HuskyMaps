@@ -143,7 +143,7 @@ public class GenerativeSeamFinder implements SeamFinder {
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
                 // Returnable list and Pixel
                 List<Edge<Node>> neighbors = new ArrayList<Edge<Node>>();
-                // below can be replaced w/ 'this'
+                // 'from' can be replaced w/ 'this'
                 // Pixel from = new Pixel(this.x, this.y);
 
                 // source handler, check if on edge
