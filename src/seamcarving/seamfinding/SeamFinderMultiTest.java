@@ -59,6 +59,7 @@ class SeamFinderMultiTest {
     };
 
     public static void main(String[] args) throws IOException {
+
         System.out.println("Testing Djikstra Solver");
         test(new AdjacencyListSeamFinder(DijkstraSolver::new));
         System.out.println("\n=============================================");
